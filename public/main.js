@@ -8,22 +8,7 @@ const paragraphs = [
   "Hedera's public key infrastructure (PKI) and account model provide a simplified yet highly secure framework for cryptographic operations. Each account on Hedera is associated with an Ed25519 public-private key pair, which ensures robust security against modern attack vectors. Developers can use the Hedera SDK to perform operations like signing transactions, managing multi-signature accounts, and integrating key rotation for enhanced security. This cryptographic foundation is critical for applications that handle sensitive data or financial transactions, as it ensures that all operations are authenticated and verifiable, without compromising on performance.",
   "Hedera's file storage capabilities offer a unique approach to managing small data files on a distributed network. Unlike centralized cloud storage solutions, Hedera stores files directly on the hashgraph, ensuring immutability and decentralized access. Developers can use this feature to store configuration files, public keys, or metadata associated with tokens or smart contracts. Files stored on Hedera are secured through cryptographic hashes, making them tamper-proof and easily verifiable. This is particularly useful for use cases such as digital identity management, document verification, and decentralized applications requiring lightweight data storage.",
   "The Hedera SDK supports multiple programming languages, including Java, JavaScript, Python, and Go, enabling developers to integrate Hedera's services with their preferred tech stack. This flexibility allows seamless adoption of Hedera's APIs for use cases like payment systems, token management, and decentralized applications. The SDK also includes utilities for managing accounts, querying transaction history, and signing messages, simplifying the development process. By providing comprehensive documentation and active community support, Hedera ensures that developers can quickly prototype, build, and deploy scalable applications on its network.",
-  "Leveraging the Hedera Consensus Service (HCS), developers can build decentralized event-tracking systems with guaranteed immutability and fairness. By submitting events to the HCS, applications receive cryptographic timestamps and globally ordered events, ensuring a reliable audit trail for regulatory compliance. This capability is ideal for industries like supply chain management, where transparency and traceability are crucial, or for financial services that require tamper-proof transaction logs. The low latency and high throughput of HCS make it an unparalleled choice for applications requiring real-time event processing at scale, all while maintaining low operational costs."
-];
-
-
-const leaderboardData = [
-  { name: "Alice", score: 95 },
-  { name: "Bob", score: 90 },
-  { name: "Charlie", score: 85 },
-  { name: "Dave", score: 80 },
-  { name: "Eve", score: 75 },
-  { name: "Frank", score: 70 },
-  { name: "Grace", score: 65 },
-  { name: "Hank", score: 60 },
-  { name: "Ivy", score: 55 },
-  { name: "Jack", score: 50 },
-  { name: "Kim", score: 45 },
+  "Leveraging the Hedera Consensus Service (HCS), developers can build decentralized event-tracking systems with guaranteed immutability and fairness. By submitting events to the HCS, applications receive cryptographic timestamps and globally ordered events, ensuring a reliable audit trail for regulatory compliance. This capability is ideal for industries like supply chain management, where transparency and traceability are crucial, or for financial services that require tamper-proof transaction logs. The low latency and high throughput of HCS make it an unparalleled choice for applications requiring real-time event processing at scale, all while maintaining low operational costs.",
 ];
 
 const typingText = document.querySelector(".typing-text p");
@@ -35,7 +20,7 @@ const wpmTag = document.querySelector(".wpm span");
 const cpmTag = document.querySelector(".cpm span");
 
 let timer;
-let maxTime = 40;
+let maxTime = 3; // 60 seconds - also modify frontend
 let timeLeft = maxTime;
 let charIndex = (mistakes = isTyping = 0);
 
@@ -43,143 +28,147 @@ let charIndex = (mistakes = isTyping = 0);
 document.getElementById("playNow").addEventListener("click", () => {
   resetGame();
 });
-
-document.getElementById("leaderboard").addEventListener("click", showLeaderboard);
-document.getElementById("closeLeaderboard").addEventListener("click", closeLeaderboard);
-
-document.getElementById("howToPlay").addEventListener("click", () => {
-  alert("Type the text as fast as you can without errors!");
-});
-
 document.getElementById("closeModal").addEventListener("click", closeModal);
 
-
 function loadParagraph() {
-    const ranIndex = Math.floor(Math.random() * paragraphs.length);
-    typingText.innerHTML = "";
-    paragraphs[ranIndex].split("").forEach((char) => {
-        let span = `<span>${char}</span>`;
-        typingText.innerHTML += span;
-    });
-    typingText.querySelectorAll("span")[0].classList.add("active");
-    document.addEventListener("keydown", () => inpField.focus());
-    typingText.addEventListener("click", () => inpField.focus());
+  const ranIndex = Math.floor(Math.random() * paragraphs.length);
+  typingText.innerHTML = "";
+  paragraphs[ranIndex].split("").forEach((char) => {
+    let span = `<span>${char}</span>`;
+    typingText.innerHTML += span;
+  });
+  typingText.querySelectorAll("span")[0].classList.add("active");
+  document.addEventListener("keydown", () => inpField.focus());
+  typingText.addEventListener("click", () => inpField.focus());
 }
 
 function initTyping() {
   let characters = typingText.querySelectorAll("span");
   let typedChar = inpField.value.split("")[charIndex];
   if (charIndex < characters.length && timeLeft > 0) {
-      if (!isTyping) {
-          timer = setInterval(initTimer, 1000);
-          isTyping = true;
+    if (!isTyping) {
+      timer = setInterval(initTimer, 1000);
+      isTyping = true;
+    }
+    if (typedChar == null) {
+      if (charIndex > 0) {
+        charIndex--;
+        if (characters[charIndex].classList.contains("incorrect")) {
+          mistakes--;
+        }
+        characters[charIndex].classList.remove("correct", "incorrect");
       }
-      if (typedChar == null) {
-          if (charIndex > 0) {
-              charIndex--;
-              if (characters[charIndex].classList.contains("incorrect")) {
-                  mistakes--;
-              }
-              characters[charIndex].classList.remove("correct", "incorrect");
-          }
+    } else {
+      if (characters[charIndex].innerText == typedChar) {
+        characters[charIndex].classList.add("correct");
       } else {
-          if (characters[charIndex].innerText == typedChar) {
-              characters[charIndex].classList.add("correct");
-          } else {
-              mistakes++;
-              characters[charIndex].classList.add("incorrect");
-          }
-          charIndex++;
+        mistakes++;
+        characters[charIndex].classList.add("incorrect");
       }
+      charIndex++;
+    }
 
-      // Remove active class from all spans and add to current
-      characters.forEach((span) => span.classList.remove("active"));
-      if (characters[charIndex]) {
-          characters[charIndex].classList.add("active");
+    // Remove active class from all spans and add to current
+    characters.forEach((span) => span.classList.remove("active"));
+    if (characters[charIndex]) {
+      characters[charIndex].classList.add("active");
 
-          // Scroll to the active character
-          characters[charIndex].scrollIntoView({
-              behavior: "smooth",
-              block: "center",
-          });
-      }
+      // Scroll to the active character
+      characters[charIndex].scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+    }
 
-      let wpm = Math.round(
-          ((charIndex - mistakes) / 5 / (maxTime - timeLeft)) * 60
-      );
-      wpm = wpm < 0 || !wpm || wpm === Infinity ? 0 : wpm;
+    let wpm = Math.round(
+      ((charIndex - mistakes) / 5 / (maxTime - timeLeft)) * 60
+    );
+    wpm = wpm < 0 || !wpm || wpm === Infinity ? 0 : wpm;
 
-      wpmTag.innerText = wpm;
-      mistakeTag.innerText = mistakes;
-      cpmTag.innerText = charIndex - mistakes;
+    wpmTag.innerText = wpm;
+    mistakeTag.innerText = mistakes;
+    cpmTag.innerText = charIndex - mistakes;
   } else {
-      clearInterval(timer);
-      inpField.value = "";
-      showModal();
+    clearInterval(timer);
+    inpField.value = "";
+    showModal();
   }
 }
 
-
 function initTimer() {
-    if (timeLeft > 0) {
-        timeLeft--;
-        timeTag.innerText = timeLeft;
-    } else {
-        clearInterval(timer);
-        showModal();
-    }
+  if (timeLeft > 0) {
+    timeLeft--;
+    timeTag.innerText = timeLeft;
+  } else {
+    clearInterval(timer);
+    showModal();
+  }
 }
 
 function resetGame() {
-    loadParagraph();
-    clearInterval(timer);
-    timeLeft = maxTime;
-    charIndex = mistakes = isTyping = 0;
-    inpField.value = "";
-    timeTag.innerText = timeLeft;
-    wpmTag.innerText = 0;
-    mistakeTag.innerText = 0;
-    cpmTag.innerText = 0;
+  loadParagraph();
+  clearInterval(timer);
+  timeLeft = maxTime;
+  charIndex = mistakes = isTyping = 0;
+  inpField.value = "";
+  timeTag.innerText = timeLeft;
+  wpmTag.innerText = 0;
+  mistakeTag.innerText = 0;
+  cpmTag.innerText = 0;
 }
 
 // Modal Functions
-function showModal() {
-    const modal = document.getElementById("resultModal");
-    document.getElementById("modalMistakes").innerText = mistakes;
-    document.getElementById("modalWPM").innerText = wpmTag.innerText;
-    document.getElementById("modalCPM").innerText = cpmTag.innerText;
-    modal.style.display = "flex";
+async function showModal() {
+  const modal = document.getElementById("resultModal");
+  document.getElementById("modalMistakes").innerText = mistakes;
+  document.getElementById("modalWPM").innerText = wpmTag.innerText;
+  document.getElementById("modalCPM").innerText = cpmTag.innerText;
+  document.getElementById("modalRank").innerText = "Submitting...";
+  modal.style.display = "flex";
+
+  // Save result to leaderboard
+  let playerName = prompt("Enter your name for the leaderboard:");
+
+  if (playerName.includes(":")) {
+    alert("Name cannot contain colons (:). Please try again.");
+    playerName = prompt("Enter your name for the leaderboard:");
+  }
+
+  const rank = await submitScore(
+    playerName.trim(),
+    wpmTag.innerText,
+    mistakes,
+    cpmTag.innerText
+  );
+  
+  document.getElementById("modalRank").innerText = rank;
+}
+
+async function submitScore(name, wpm, mistakes, cpm) {
+  try {
+    const response = await fetch("http://localhost:3000/api/scores", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name,
+        wpm: parseInt(wpm),
+        mistakes: parseInt(mistakes),
+        cpm: parseInt(cpm),
+      }),
+    });
+
+    // Optionally redirect to leaderboard
+    //window.location.href = '/game/leaderboard.html';
+
+    const { rank } = await response.json();
+    return rank;
+  } catch (err) {
+    console.error("Failed to submit score", err);
+  }
 }
 
 function closeModal() {
-    const modal = document.getElementById("resultModal");
-    modal.style.display = "none";
-}
-
-// Show leaderboard modal
-function showLeaderboard() {
-  const modal = document.getElementById("leaderboardModal");
-  const leaderboardList = document.getElementById("leaderboardList");
-
-  // Clear existing entries
-  leaderboardList.innerHTML = "";
-
-  // Get top 10 results and populate the list
-  leaderboardData
-      .slice(0, 10)
-      .forEach((entry, index) => {
-          const listItem = document.createElement("li");
-          listItem.textContent = `${index + 1}. ${entry.name} - ${entry.score}`;
-          leaderboardList.appendChild(listItem);
-      });
-
-  // Show the modal
-  modal.style.display = "flex";
-}
-
-// Close leaderboard modal
-function closeLeaderboard() {
-  const modal = document.getElementById("leaderboardModal");
+  const modal = document.getElementById("resultModal");
   modal.style.display = "none";
 }
 

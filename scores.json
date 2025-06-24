@@ -1,0 +1,38 @@
+[
+  {
+    "name": "Greg",
+    "wpm": 180,
+    "mistakes": 2,
+    "cpm": 30
+  },
+  {
+    "name": "Tulie",
+    "wpm": 174,
+    "mistakes": 0,
+    "cpm": 29
+  },
+  {
+    "name": " Tine",
+    "wpm": 162,
+    "mistakes": 5,
+    "cpm": 27
+  },
+  {
+    "name": "Debby",
+    "wpm": 126,
+    "mistakes": 0,
+    "cpm": 21
+  },
+  {
+    "name": "Katrien",
+    "wpm": 114,
+    "mistakes": 5,
+    "cpm": 19
+  },
+  {
+    "name": " slsl",
+    "wpm": 24,
+    "mistakes": 18,
+    "cpm": 2
+  }
+]

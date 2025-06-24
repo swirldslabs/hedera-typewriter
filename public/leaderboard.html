@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Leaderboard</title>
+    <link rel="stylesheet" href="styles.css" />
+
+    <!-- overrides to improve spacing & layout -->
+    <style>
+      /* More breathing room inside the box */
+      .content-box {
+        padding: 32px 28px;
+      }
+
+      /* Title spacing */
+      .page-title {
+        margin-bottom: 3rem;
+        font-size: 2.2rem;
+        color: white;
+      }
+
+      /* Leaderboard list outer spacing */
+      .leaderboard-list {
+        padding: 0;
+        margin: 0;
+      }
+
+      .leaderboard-list li {
+        list-style: none;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 1px solid #444;
+      }
+
+      .leaderboard-list li:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+        padding-bottom: 0;
+      }
+
+      /* Flex container for rank + name */
+      .leaderboard-list .row {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 0.75rem;
+      }
+
+      .leaderboard-list .rank {
+        flex: 0 0 auto;
+        font-size: 1.25rem;
+        font-weight: 800;
+        width: 2rem;
+      }
+
+      .leaderboard-list .player {
+        flex: 0 0 auto;
+        font-size: 1.25rem;
+        font-weight: 500;
+        width: 10rem;
+      }
+
+      /* Stats pills */
+      .leaderboard-list .stats {
+        display: flex;
+        gap: 1.5rem;
+      }
+
+      .leaderboard-list .stats div {
+        font-size: 1.1rem;
+      }
+
+      /* Empty state */
+      .leaderboard-list .empty {
+        text-align: center;
+        padding: 2.5rem 0;
+        font-size: 1.15rem;
+        color: #bbb;
+      }
+
+      /* Back button */
+      #backToGame {
+        margin-top: 2.5rem;
+      }
+    </style>
+
+    <script type="module" defer>
+      /**
+       * Periodically fetches and updates the leaderboard scores every 4.5 seconds.
+       * This ensures the leaderboard is always up-to-date without requiring a page refresh.
+       */
+      setInterval(loadLeaderboard, 4500);
+
+      /**
+       * Fetches the leaderboard scores from the server and populates the leaderboard list.
+       * Displays a message if no scores are available.
+       */
+      async function loadLeaderboard() {
+        const res = await fetch("http://localhost:3000/api/scores", {
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+        });
+        const scores = await res.json();
+        const ul = document.getElementById("leaderboardList");
+        ul.innerHTML = "";
+
+        if (!scores.length) {
+          ul.innerHTML = '<li class="empty">No scores yet. Be the first!</li>';
+          return;
+        }
+
+        scores.forEach((entry, i) => {
+          const li = document.createElement("li");
+          li.innerHTML = `
+          <div class="row">
+            <span class="rank">#${i + 1}</span>
+            <span class="player">${entry.name}</span>
+          </div>
+          <div class="stats">
+            <div><strong>${entry.wpm}</strong> WPM</div>
+            <div><strong>${entry.mistakes}</strong> Mistakes</div>
+            <div><strong>${entry.cpm}</strong> CPM</div>
+          </div>
+        `;
+          ul.appendChild(li);
+        });
+      }
+
+      window.addEventListener("DOMContentLoaded", () => {
+        loadLeaderboard();
+        document
+          .getElementById("backToGame")
+          .addEventListener(
+            "click",
+            () => (location.href = "/game/index.html")
+          );
+      });
+    </script>
+  </head>
+  <body>
+    <!-- Header Menu -->
+    <header class="menu">
+      <div class="logo">
+        <img
+          src="https://1000logos.net/wp-content/uploads/2023/04/Hedera-Logo.png"
+          alt="Hedera Logo"
+        />
+        <span>Hedera Speed Typer</span>
+      </div>
+      <nav class="navigation">
+        <button id="playNow" onclick="location.href='/game/index.html'">
+          Play Now
+        </button>
+        <button id="leaderboard" class="active">Leaderboard</button>
+      </nav>
+    </header>
+
+    <div class="wrapper">
+      <div class="content-box">
+        <h1 class="page-title">🏆 Leaderboard</h1>
+        <ul id="leaderboardList" class="result-details leaderboard-list"></ul>
+        <button id="backToGame">← Back to Game</button>
+      </div>
+    </div>
+  </body>
+</html>

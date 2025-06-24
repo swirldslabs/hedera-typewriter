@@ -1,5 +1,3 @@
----
-
 # 🚀 Speed Typing Game
 
 ![HTML](https://img.shields.io/badge/HTML-5-orange)
@@ -16,25 +14,24 @@ Welcome to the **Speed Typing Game**, a web-based application designed to test a
 3. Once the time is up or the paragraph is completed, your final speed, accuracy, and the number of mistakes will be displayed.
 4. Click the "Try Again" button to reset the game and try a different paragraph.
 
-## 🌟 Features
+### Setup
 
-- **Paragraphs for Typing**: Randomly selected paragraphs for each game session to keep the challenge fresh.
-- **Real-time Feedback**: Immediate feedback on typing speed (WPM), accuracy (CPM), and mistakes.
-- **Countdown Timer**: A40-second timer to add urgency and challenge to the game.
-- **Try Again Button**: Easily reset the game to start a new typing challenge.
+Before we can run the game, make sure to execute the `topicCreate/script.js` file to generate the necessary topic for the game:
 
-## 🛠️ Tech Stack
+```sh
+cd topicCreate
+npm install
+node script.js
+```
 
-- **Frontend**: HTML, CSS, JavaScript
+// WHEN CHANGING TOPIC ID, makes ure to also change it in the index.html file:
+Line 69: <p><strong>Rank: <a href="https://hashscan.io/testnet/topic/0.0.6219486" target="_blank"><span id="modalRank">0</span></a></strong></p>
 
 
-## 🚀 Getting Started
+Timer starts at 60 seconds and counts down to 0. The game ends when the timer reaches 0 or when the player finishes typing the paragraph.
+Check the timer in the index.html file to adjust the time limit as needed.
 
-### 📋 Prerequisites
-
-Make sure you have the following installed on your local machine:
-
-- A web browser (e.g., Chrome, Firefox)
+**Then copy the Topic ID from the console output and paste it into the `main.js` file at line 1: `const topicId = "<id>"`.**
 
 ### 🔧 Installation
 
@@ -58,7 +55,5 @@ For any questions or suggestions, feel free to reach out:
 
 - 📧 Email: vihangasupasan2001@gmail.com
 - 🐙 GitHub: [KDvs123](https://github.com/KDvs123)
-
----
 
 Enjoy improving your typing skills with the Speed Typing Game! 🚀✨

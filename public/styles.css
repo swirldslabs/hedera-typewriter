@@ -107,10 +107,25 @@ body {
     background: none;
     transition: transform 0.2s ease;
 }
-.content button:active {
+button {
+    outline: none;
+    border: none;
+    width: 200px;
+    margin-bottom: 25px;
+    color: #8259ef; /* Hedera Ultraviolet */
+    padding: 8px 0;
+    font-size: 17px;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 15px;
+    border: 3px solid #8259ef; /* Hedera Ultraviolet */
+    background: none;
+    transition: transform 0.2s ease;
+}
+.content button:active, button:active {
     transform: scale(0.89);
 }
-.content button:hover {
+.content button:hover, button:hover {
     background: #FFFFFF;
 }
 .content .result-details {
@@ -127,10 +142,10 @@ body {
     position: relative;
     align-items: center;
 }
-.result-details li:not(:first-child) {
+/*.result-details li:not(:first-child) {
     padding-left: 22px;
     border-left: 2px solid #bfbfbf;
-}
+}*/
 .result-details li p {
     font-size: 13px;
 }
