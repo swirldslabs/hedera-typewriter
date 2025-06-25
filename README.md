@@ -17,7 +17,7 @@ Welcome to the **Speed Typing Game**, a web-based application designed to test a
 
 ### Setup
 
-1. **Topic ID:** Before we can run the game, make sure to create a new topic ID on the Hedera testnet and replace at `server.js` line 15: `const topicId = "<id>";` with your new topic ID.
+1. **Topic ID:** Before we can run the game, make sure to create a new topic ID on the Hedera testnet and replace at `server.js` [line 15: `const topicId = "<id>";`](https://github.com/michielmulders/hedera-typewriter/blob/main/server.js#L15) with your new topic ID.
 
 2. **Hedera Account:** Ensure you have a Hedera account set up with testnet credentials. You can create an account on the [Hedera Portal](https://portal.hedera.com/). Make sure to use the ECDSA private key for your account.
 
