@@ -51,7 +51,7 @@ Upon starting the server, it will sync with the Hedera topic and fetch all messa
 
 5. **Open the Game:** Open your web browser and navigate to `http://localhost:3000/game/index.html` to start playing the Speed Typing Game. The leaaderboard can be accessed at `http://localhost:3000/game/leaderboard.html`.
 
-6. **Booth Mode:** At conferences, you can run the game in one tab (`game/index.html`) and the leaderboard in another tab (`game/leaderboard.html`). This allows you to have a booth where people can play the game and see their scores in real-time. The leaderboard will automatically update every 2.5 seconds.
+**How to use at conference booths?** At conferences, you can run the game in one tab (`game/index.html`) and the leaderboard in another tab (`game/leaderboard.html`). This allows you to have a booth where people can play the game and see their scores in real-time. The leaderboard will automatically update every 2.5 seconds.
 
 
 ## 📜 License
