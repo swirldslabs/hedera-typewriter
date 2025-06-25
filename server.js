@@ -12,7 +12,7 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = process.env.PORT || 3000;
 const SCORES_FILE = path.join(__dirname, "scores.json");
-const topicId = "0.0.6219486"; // Replace with your actual topic ID
+const topicId = process.env.TOPIC_ID; // Replace with your actual topic ID
 
 // Hedera setup
 import {

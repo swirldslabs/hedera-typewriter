@@ -17,11 +17,10 @@ Welcome to the **Speed Typing Game**, a web-based application designed to test a
 
 ### Setup
 
-1. **Topic ID:** Before we can run the game, make sure to create a new topic ID on the Hedera testnet and replace at `server.js` [line 15: `const topicId = "<id>";`](https://github.com/michielmulders/hedera-typewriter/blob/main/server.js#L15) with your new topic ID.
+1. **Topic ID:** Before we can run the game, make sure to create a new topic ID on the Hedera testnet. Copy the Topic ID and paste it in the `.env` file in the next step.
 
-2. **Hedera Account:** Ensure you have a Hedera account set up with testnet credentials. You can create an account on the [Hedera Portal](https://portal.hedera.com/). Make sure to use the ECDSA private key for your account.
-
-Fill out your OPERATOR KEY and OPERATOR ID in the `.env` file. You can copy the `.env.example` file to `.env` and fill in your details:
+2. **Hedera Account and Environmetn Variables**:
+Fill out your OPERATOR_KEY, OPERATOR_ID, and TOPIC_ID in the `.env` file. You can copy the `.env.example` file to `.env` and fill in your details:
 
 ```sh
 cp .env.example .env
@@ -31,7 +30,9 @@ Content of `.env` file should look like this:
 
 ```
 OPERATOR_ID=your_operator_id
-OPERATOR_KEY=your_operator_key (ECDSA private key)
+OPERATOR_KEY=your_operator_key #(ECDSA private key)
+TOPIC_ID=0.0.123456 #(your topic ID)
+PORT=3000 #(optional, default is 3000)
 ```
 
 3. **Install Dependencies:** Make sure you have Node.js installed on your machine. Then, install the required dependencies by running:
