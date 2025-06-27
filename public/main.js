@@ -20,7 +20,7 @@ const wpmTag = document.querySelector(".wpm span");
 const cpmTag = document.querySelector(".cpm span");
 
 let timer;
-let maxTime = 40; // If you change this value, make sure to update the HTML value as well
+let maxTime = 10; // If you change this value, make sure to update the HTML value as well
 let timeLeft = maxTime;
 let charIndex = (mistakes = isTyping = 0);
 
@@ -38,7 +38,13 @@ function loadParagraph() {
     typingText.innerHTML += span;
   });
   typingText.querySelectorAll("span")[0].classList.add("active");
-  document.addEventListener("keydown", () => inpField.focus());
+  document.addEventListener("keydown", () => {
+    const isModalOpen =
+      document.getElementById("resultModal").style.display === "flex";
+    if (!isModalOpen) {
+      inpField.focus();
+    }
+  });
   typingText.addEventListener("click", () => inpField.focus());
 }
 
@@ -123,26 +129,46 @@ async function showModal() {
   document.getElementById("modalMistakes").innerText = mistakes;
   document.getElementById("modalWPM").innerText = wpmTag.innerText;
   document.getElementById("modalCPM").innerText = cpmTag.innerText;
-  document.getElementById("modalRank").innerText = "Submitting...";
+  document.getElementById("modalRank").innerText = "0";
+
+  // Show the modal and name form
   modal.style.display = "flex";
+  const nameForm = document.getElementById("nameForm");
+  nameForm.style.display = "block";
+}
 
-  // Save result to leaderboard
-  let playerName = prompt("Enter your name for the leaderboard:");
+// Handle name submission
+document.getElementById("nameForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const playerNameInput = document.getElementById("playerNameInput");
+  let playerName = playerNameInput.value.trim();
 
+  // Validate against colons
   if (playerName.includes(":")) {
     alert("Name cannot contain colons (:). Please try again.");
-    playerName = prompt("Enter your name for the leaderboard:");
+    return;
   }
 
+  // Disable the submit button while submitting
+  const submitBtn = document.getElementById("submitName");
+  submitBtn.disabled = true;
+  document.getElementById("modalRank").innerText = "Submitting...";
+
+  // Send score
   const rank = await submitScore(
-    playerName.trim(),
+    playerName,
     wpmTag.innerText,
     mistakes,
     cpmTag.innerText
   );
-  
+
+  // Update rank display
   document.getElementById("modalRank").innerText = rank;
-}
+
+  // Optionally hide the form after submission
+  playerNameInput.style.display = "none";
+  submitBtn.style.display = "none";
+});
 
 async function submitScore(name, wpm, mistakes, cpm) {
   try {
