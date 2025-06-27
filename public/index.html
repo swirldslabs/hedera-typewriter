@@ -1,74 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Speed Typing Game</title>
-    <link rel="stylesheet" href="styles.css">
-    <script src="main.js" defer></script>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Speed Typing Game</title>
+<link rel="stylesheet" href="styles.css">
+<script src="main.js" defer></script>
 </head>
 <body>
-    <!-- Header Menu -->
-    <header class="menu">
-        <div class="logo">
-            <img src="https://1000logos.net/wp-content/uploads/2023/04/Hedera-Logo.png" alt="Hedera Logo">
-            <span>Hedera Speed Typer</span>
-        </div>
-        <nav class="navigation">
-            <button id="playNow" class="active">Play Now</button>
-            <button id="leaderboard" onclick="location.href='/game/leaderboard.html'">Leaderboard</button>
-        </nav>
-    </header>
-
-    <div class="wrapper">
-        <input type="text" class="input-field">
-        <div class="content-box">
-            <div class="typing-text">
-                <p id="paragraph"></p>
-            </div>
-            <div class="content">
-                <ul class="result-details">
-                    <li class="time">
-                        <p>
-                            Time Left:
-                        </p>
-                        <span><b>40</b>s</span>
-                    </li>
-                    <li class="mistake">
-                        <p>
-                            Mistakes:
-                        </p>
-                        <span>0</span>
-                    </li>
-                    <li class="wpm">
-                        <p>
-                            WPM:
-                        </p>
-                        <span>0</span>
-                    </li>
-                    <li class="cpm">
-                        <p>
-                            CPM:
-                        </p>
-                        <span>0</span>
-                    </li>
-                </ul>
-                <button>Try Again</button>
-            </div>
-        </div>
+<!-- Header Menu -->
+<header>
+  <div class="logo"> <a href="https://hedera.com/" target="_blank"><img src="images/logo-hedera.svg" alt="Hedera"></a> <span>Hedera Speed Typer</span> </div>
+  <nav class="navigation">
+    <button id="playNow" class="active">Play Now</button>
+    <button id="leaderboard" onclick="location.href='/game/leaderboard.html'">Leaderboard</button>
+  </nav>
+</header>
+<div class="wrapper">
+  <div class="heading">
+    <h2>Type at the Speed of Hedera</h2>
+    <h1>Hedera Speed Typer</h1>
+    <p>Put your typing skills to the test in this fast-paced challenge.</p>
+    <p>How many words can you crush before time runs out?</p>
+  </div>
+  <ul class="result-details">
+    <li class="time"> <span><b>40</b>s</span>
+      <p> Time Left </p>
+    </li>
+    <li class="mistake"> <span>0</span>
+      <p> Mistakes </p>
+    </li>
+    <li class="wpm"> <span>0</span>
+      <p> Words Per Minute </p>
+    </li>
+    <li class="cpm"> <span>0</span>
+      <p> CPM </p>
+    </li>
+  </ul>
+  <input type="text" class="input-field">
+  <div class="content-box">
+    <div class="typing-text">
+      <p id="paragraph"></p>
     </div>
+  </div>
+  <button>Try Again</button>
+</div>
 
-    <!-- Modal for results -->
-    <div class="modal" id="resultModal">
-        <div class="modal-content">
-            <h2>Results</h2>
-            <p>Mistakes: <span id="modalMistakes">0</span></p>
-            <p>WPM: <span id="modalWPM">0</span></p>
-            <p>CPM: <span id="modalCPM">0</span></p>
-            <p><strong>Rank: <a href="https://hashscan.io/testnet/topic/0.0.6219486" target="_blank"><span id="modalRank">0</span></a></strong></p>
-            <button id="closeModal">Close</button>
-        </div>
-    </div>
+<!-- Modal for results -->
+<div class="modal" id="resultModal">
+  <div class="modal-content">
+    <h2>Results</h2>
+    <p>Mistakes: <span id="modalMistakes">0</span></p>
+    <p>WPM: <span id="modalWPM">0</span></p>
+    <p>CPM: <span id="modalCPM">0</span></p>
+    <p><strong>Rank: <a href="https://hashscan.io/testnet/topic/0.0.6219486" target="_blank"><span id="modalRank">0</span></a></strong></p>
+    <button id="closeModal">Close</button>
+  </div>
+</div>
 </body>
 </html>
