@@ -13,14 +13,14 @@ const paragraphs = [
 
 const typingText = document.querySelector(".typing-text p");
 const inpField = document.querySelector(".wrapper .input-field");
-const tryAgainBtn = document.querySelector(".content button");
+const tryAgainBtn = document.getElementById("tryAgain");
 const timeTag = document.querySelector(".time span b");
 const mistakeTag = document.querySelector(".mistake span");
 const wpmTag = document.querySelector(".wpm span");
 const cpmTag = document.querySelector(".cpm span");
 
 let timer;
-let maxTime = 10; // If you change this value, make sure to update the HTML value as well
+let maxTime = 2; // If you change this value, make sure to update the HTML value as well
 let timeLeft = maxTime;
 let charIndex = (mistakes = isTyping = 0);
 
@@ -133,8 +133,7 @@ async function showModal() {
 
   // Show the modal and name form
   modal.style.display = "flex";
-  const nameForm = document.getElementById("nameForm");
-  nameForm.style.display = "block";
+  document.getElementById("nameForm").style.display = "block";
 }
 
 // Handle name submission
@@ -196,8 +195,31 @@ async function submitScore(name, wpm, mistakes, cpm) {
 function closeModal() {
   const modal = document.getElementById("resultModal");
   modal.style.display = "none";
+
+  // Hide name form and reset it for the next round
+  const nameForm = document.getElementById("nameForm");
+  nameForm.style.display = "none";
+  const playerNameInput = document.getElementById("playerNameInput");
+  playerNameInput.style.display = "block";
+  playerNameInput.value = "";
+  const submitBtn = document.getElementById("submitName");
+  submitBtn.style.display = "block";
+  submitBtn.disabled = false;
+
+  // Refocus on the hidden game input so the user can start typing again
+  inpField.focus();
 }
+
+document.getElementById("closeModal").addEventListener("click", closeModal);
+tryAgainBtn.addEventListener("click", () => {
+  // If the modal is open, close it first
+  if (document.getElementById("resultModal").style.display === "flex") {
+    closeModal();
+  } else {
+    resetGame();
+    inpField.focus();
+  }
+});
 
 loadParagraph();
 inpField.addEventListener("input", initTyping);
-tryAgainBtn.addEventListener("click", resetGame);
