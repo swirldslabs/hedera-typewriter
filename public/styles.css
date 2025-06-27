@@ -19,12 +19,17 @@
   font-style: normal;
 }
 
-/* ========== BASE RESET ========== */
+/* ========== BASE ========== */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
   font-family: 'Styrene A Web', sans-serif;
+}
+
+html {
+	scroll-behavior: smooth;
+ 	-webkit-font-smoothing: antialiased;
 }
 
 ::selection {
@@ -34,21 +39,23 @@
 
 body {
   display: flex;
-  align-items: center;
+  flex-direction: column;
   justify-content: center;
   min-height: 100vh;
-  background: 
+  padding-top: 80px; /* Offset for fixed header */
+  background:
     url("images/hedera-circle.png") bottom center no-repeat,
     linear-gradient(160deg, rgba(16, 16, 16, 1) 0%, rgba(0, 0, 0, 1) 100%);
   background-color: #101010;
+  overflow-x: hidden;
 }
 
 /* ========== STRUCTURE ========== */
 .wrapper {
   width: 740px;
   text-align: center;
-  margin-top: 100px;
-  margin-bottom: 100px;
+  margin: 0 auto;
+	padding-bottom: 24px;
 }
 
 .heading {
@@ -57,6 +64,30 @@ body {
 
 .sm-space-top {
   margin-top: 8px;
+}
+
+#nameForm input {
+  background-color: rgba(255, 255, 255, 0.08);
+	border: none;
+  border-bottom: 1px solid #8259EF;
+  color: #FFF;
+  font-size: 15px;
+  width: 100%;
+  padding: 16px;
+  margin: 16px 0 40px 0;
+	outline: none;
+	box-shadow: none;
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+}
+
+#nameForm input:focus,
+#nameForm textarea:focus,
+#nameForm select:focus {
+  	outline: none;
+  	border-bottom: 3px solid #8259EF;
+	box-shadow: none;
 }
 
 /* ========== TYPOGRAPHY ========== */
@@ -75,7 +106,8 @@ h2 {
   margin-bottom: 8px;
 }
 
-p {
+p,
+label {
   font-size: 16px;
   line-height: 22px;
   color: #F6F6F6;
@@ -94,6 +126,7 @@ button {
   cursor: pointer;
   outline: none;
   transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+	min-height: 34px;
 }
 
 button:hover {
@@ -102,18 +135,21 @@ button:hover {
 }
 
 #playNow,
-#backToGame {
+#backToGame,
+#submitName {
   border: none;
   background: linear-gradient(to right, #0031FF 60%, #9747FF 100%);
   margin-right: 24px;
 }
 
-#backToGame {
+#backToGame,
+#submitName {
   margin: 0;
 }
 
 #playNow:hover,
-#backToGame:hover {
+#backToGame:hover,
+#submitName:hover {
   transform: scale(1.02);
   box-shadow: 0 0 12px rgba(0, 49, 255, 0.1);
 }
@@ -195,7 +231,7 @@ header .logo span {
 }
 
 .typing-text p span.incorrect {
-  color: #8259EF;
+  color: #EF5959;
   border-radius: 4px;
 }
 
@@ -305,116 +341,42 @@ header .logo span {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.8);
   justify-content: center;
   align-items: center;
   z-index: 1000;
 }
 
+.modal-header {
+	background-color: rgba(0, 0, 0, 0.16);
+	margin: 4px 4px 0 4px;
+	padding: 16px 40px;
+ 	display: flex;
+ 	justify-content: space-between;
+ 	align-items: center;
+	color: #FFF;
+	font-size: 20px;
+}
+
 .modal-content {
-  background-color: #f2eded;
-  padding: 20px;
-  border-radius: 8px;
+  background-color: #222;
+  border-radius: 4px;
   text-align: center;
-  width: 300px;
+  width: 740px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-.modal-content h2 {
-  margin-bottom: 10px;
+.modal-info {
+  padding: 40px;
 }
 
-.modal-content p {
-  margin: 10px 0;
+#modalRank {
+	color: #8259EF;
+	text-decoration: none;
 }
 
-.modal-content ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+.modal-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
-
-.modal-content ul li {
-  padding: 5px 0;
-  font-size: 16px;
-  border-bottom: 1px solid #ddd;
-}
-
-.modal-content ul li:last-child {
-  border-bottom: none;
-}
-
-#closeModal,
-.modal-content button {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-#closeModal {
-  background-color: #3ec878;
-}
-
-#closeModal:hover {
-  background-color: #34a965;
-}
-
-.modal-content button:hover {
-  background-color: #0056b3;
-}
-
-
-/* MEDIA QUERIES */
-/*
-@media (max-width: 745px) {
-    .wrapper {
-        padding: 20px;
-    }
-    .content-box .content {
-        padding: 20px 0;
-    }
-    .content-box .typing-text {
-        max-height: 100%;
-    }
-    .typing-text p {
-        font-size: 19px;
-        text-align: left;
-    }
-    .content button {
-        width: 100%;
-        font-size: 15px;
-        padding: 10px 0;
-        margin-top: 20px;
-    }
-    .content .result-details {
-        width: 100%;
-    }
-    .result-details li:not(:first-child) {
-        border-left: 0;
-        padding: 0;
-    }
-    .result-details li p,
-    .result-details li span {
-        font-size: 15px;
-    }
-}
-*/
-/*
-@media (max-width: 518px) {
-    .wrapper .content-box {
-        padding: 10px 15px 0;
-    }
-    .typing-text p {
-        font-size: 13px;
-    }
-    .result-details li {
-        margin-bottom: 10px;
-    }
-    .content button {
-        margin-top: 10px;
-    }
-}
-*/
