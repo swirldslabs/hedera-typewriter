@@ -24,11 +24,17 @@ let maxTime = 40; // If you change this value, make sure to update the HTML valu
 let timeLeft = maxTime;
 let charIndex = (mistakes = isTyping = 0);
 
-// Event listeners for menu buttons
-document.getElementById("playNow").addEventListener("click", () => {
-  resetGame();
-});
-document.getElementById("closeModal").addEventListener("click", closeModal);
+// Modal elements
+const nameForm = document.getElementById('nameForm');
+const playerNameInput = document.getElementById('playerNameInput');
+const submitNameBtn = document.getElementById('submitName');
+
+// Hide name form and button initially
+nameForm.hidden = true;
+submitNameBtn.style.display = 'none';
+
+// Menu buttons
+document.getElementById('playNow').addEventListener('click', resetGame);
 
 function loadParagraph() {
   const ranIndex = Math.floor(Math.random() * paragraphs.length);
@@ -124,50 +130,71 @@ function resetGame() {
 }
 
 // Modal Functions
+// Show results modal and name form
 async function showModal() {
-  const modal = document.getElementById("resultModal");
-  document.getElementById("modalMistakes").innerText = mistakes;
-  document.getElementById("modalWPM").innerText = wpmTag.innerText;
-  document.getElementById("modalCPM").innerText = cpmTag.innerText;
-  document.getElementById("modalRank").innerText = "0";
+  const modal = document.getElementById('resultModal');
+  document.getElementById('modalMistakes').innerText = mistakes;
+  document.getElementById('modalWPM').innerText = wpmTag.innerText;
+  document.getElementById('modalCPM').innerText = cpmTag.innerText;
+  document.getElementById('modalRank').innerText = 'TBD'; // Placeholder until score is submitted
 
-  // Show the modal and name form
-  modal.style.display = "flex";
-  document.getElementById("nameForm").style.display = "block";
+  // Reveal the form
+  nameForm.hidden = false;
+  submitNameBtn.style.display = '';
+  playerNameInput.disabled = false;
+  playerNameInput.value = '';
+  submitNameBtn.disabled = false;
+
+  modal.style.display = 'flex';
+  playerNameInput.focus();
 }
 
-// Handle name submission
-document.getElementById("nameForm").addEventListener("submit", async (e) => {
-  e.preventDefault();
-  const playerNameInput = document.getElementById("playerNameInput");
-  let playerName = playerNameInput.value.trim();
+typeof showModal;
 
-  // Validate against colons
-  if (playerName.includes(":")) {
-    alert("Name cannot contain colons (:). Please try again.");
+// Handle score submission via the standalone button
+submitNameBtn.addEventListener('click', async () => {
+  const name = playerNameInput.value.trim();
+  if (!name) {
+    alert('Please enter your name.');
+    playerNameInput.focus();
+    return;
+  }
+  if (name.includes(':')) {
+    alert('Name cannot contain colons (:). Please try again.');
+    playerNameInput.focus();
     return;
   }
 
-  // Disable the submit button while submitting
-  const submitBtn = document.getElementById("submitName");
-  submitBtn.disabled = true;
-  document.getElementById("modalRank").innerText = "Submitting...";
+  submitNameBtn.disabled = true;
+  document.getElementById('modalRank').innerText = 'Submitting...';
 
-  // Send score
   const rank = await submitScore(
-    playerName,
+    name,
     wpmTag.innerText,
     mistakes,
     cpmTag.innerText
   );
 
-  // Update rank display
-  document.getElementById("modalRank").innerText = rank;
-
-  // Optionally hide the form after submission
-  playerNameInput.style.display = "none";
-  submitBtn.style.display = "none";
+  document.getElementById('modalRank').innerText = rank;
+  playerNameInput.disabled = true;
+  submitNameBtn.style.display = 'none';
 });
+
+// Close modal, reset form, reset game, refocus
+function closeModal() {
+  const modal = document.getElementById('resultModal');
+  modal.style.display = 'none';
+
+  nameForm.hidden = true;
+  playerNameInput.disabled = false;
+  playerNameInput.value = '';
+  submitNameBtn.disabled = false;
+  submitNameBtn.style.display = 'none';
+
+  resetGame();
+  inpField.focus();
+}
+
 
 async function submitScore(name, wpm, mistakes, cpm) {
   try {
@@ -190,24 +217,6 @@ async function submitScore(name, wpm, mistakes, cpm) {
   } catch (err) {
     console.error("Failed to submit score", err);
   }
-}
-
-function closeModal() {
-  const modal = document.getElementById("resultModal");
-  modal.style.display = "none";
-
-  // Hide name form and reset it for the next round
-  const nameForm = document.getElementById("nameForm");
-  nameForm.style.display = "none";
-  const playerNameInput = document.getElementById("playerNameInput");
-  playerNameInput.style.display = "block";
-  playerNameInput.value = "";
-  const submitBtn = document.getElementById("submitName");
-  submitBtn.style.display = "block";
-  submitBtn.disabled = false;
-
-  // Refocus on the hidden game input so the user can start typing again
-  inpField.focus();
 }
 
 document.getElementById("closeModal").addEventListener("click", closeModal);
