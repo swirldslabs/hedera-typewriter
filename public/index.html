@@ -1,71 +1,117 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Speed Typing Game</title>
-<link rel="stylesheet" href="styles.css">
-<script src="main.js" defer></script>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Speed Typing Game</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" type="image/png" href="images/icon/favicon.png" />
+  <link rel="mask-icon" href="images/icon/black-cutout.svg" color="#000000">
+  <link rel="apple-touch-icon" href="images/icon/black-whiteH-1024x1024.png">
+  <link rel="apple-touch-icon" sizes="64x64" href="images/icon/black-whiteH-64x64.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="images/icon/black-whiteH-144x144.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="images/icon/black-whiteH-180x180.png">
+  <link rel="apple-touch-icon" sizes="192x192" href="images/icon/black-whiteH-192x192.png">
+  <script src="main.js" defer></script>
 </head>
 <body>
-<!-- Header Menu -->
-<header>
-  <div class="logo"> <a href="https://hedera.com/" target="_blank"><img src="images/logo-hedera.svg" alt="Hedera"></a> <span>Hedera Speed Typer</span> </div>
-  <nav class="navigation">
-    <button id="playNow" class="active">Play Now</button>
-    <button id="leaderboard" onclick="location.href='/game/leaderboard.html'">Leaderboard</button>
-  </nav>
-</header>
-<div class="wrapper">
-  <div class="heading">
-    <h2>Type at the Speed of Hedera</h2>
-    <h1>Hedera Speed Typer</h1>
-    <p>Put your typing skills to the test in this fast-paced challenge.</p>
-    <p>How many words can you crush before time runs out?</p>
+
+  <!-- Header Menu -->
+  <header>
+    <div class="logo">
+      <a href="https://hedera.com/" target="_blank">
+        <img src="images/logo-hedera.svg" alt="Hedera Logo" />
+      </a>
+      <span>Hedera Speed Typer</span>
+    </div>
+    <nav class="navigation">
+      <button id="playNow" class="active" type="button">Play Now</button>
+      <button id="leaderboard" type="button" onclick="location.href='/game/leaderboard.html'">Leaderboard</button>
+    </nav>
+  </header>
+
+  <div class="wrapper">
+    <div class="heading">
+      <h2>Type at the Speed of Hedera</h2>
+      <h1>Hedera Speed Typer</h1>
+      <p>Put your typing skills to the test in this fast-paced challenge.</p>
+      <p>How many words can you crush before time runs out?</p>
+    </div>
+
+    <ul class="result-details">
+      <li class="time">
+        <span><b>40</b>s</span>
+        <p>Time Left</p>
+      </li>
+      <li class="mistake">
+        <span>0</span>
+        <p>Mistakes</p>
+      </li>
+      <li class="wpm">
+        <span>0</span>
+        <p>WPM</p>
+      </li>
+      <li class="cpm">
+        <span>0</span>
+        <p>CPM</p>
+      </li>
+    </ul>
+
+    <input type="text" class="input-field" aria-label="Typing input field" />
+
+    <div class="content-box">
+      <div class="typing-text">
+        <p id="paragraph"></p>
+      </div>
+    </div>
+
+    <button id="tryAgain" type="button">Try Again</button>
   </div>
-  <ul class="result-details">
-    <li class="time"> <span><b>40</b>s</span>
-      <p> Time Left </p>
-    </li>
-    <li class="mistake"> <span>0</span>
-      <p> Mistakes </p>
-    </li>
-    <li class="wpm"> <span>0</span>
-      <p> Words Per Minute </p>
-    </li>
-    <li class="cpm"> <span>0</span>
-      <p> CPM </p>
-    </li>
-  </ul>
-  <input type="text" class="input-field">
-  <div class="content-box">
-    <div class="typing-text">
-      <p id="paragraph"></p>
+
+  <!-- Modal for results -->
+  <div class="modal" id="resultModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="logo">
+          <a href="https://hedera.com/" target="_blank">
+            <img src="images/logo-hedera.svg" alt="Hedera Logo" />
+          </a>
+        </div>
+        <div>
+          <span>Hedera Speed Typer Results</span>
+        </div>
+      </div>
+
+      <div class="modal-info">
+        <ul class="result-details">
+          <li><span id="modalMistakes">0</span>Mistakes</li>
+          <li><span id="modalWPM">0</span>WPM</li>
+          <li><span id="modalCPM">0</span>CPM</li>
+        </ul>
+
+        <!-- Name input form (shown conditionally via JS) -->
+        <form id="nameForm" hidden autocomplete="off">
+			    <h2>You’re currently Rank #<a href="https://hashscan.io/testnet/topic/0.0.6219486" target="_blank" id="modalRank">
+            <span id="modalRank">0</span></a></h2>
+          <label for="playerNameInput">Enter your name to secure your spot on the leaderboard:</label>
+          <input
+            type="text"
+            id="playerNameInput"
+            placeholder="Enter your name"
+            required
+            aria-label="Enter your name for the leaderboard"
+            autocomplete="off"
+          />
+        </form>
+
+        <div class="modal-footer">
+          <button id="closeModal" type="button">Close</button>
+          <button id="submitName" type="submit">Submit</button>
+        </div>
+      </div>
     </div>
   </div>
-  <button id="tryAgain">Try Again</button>
-</div>
 
-<!-- Modal for results -->
-<div class="modal" id="resultModal">
-  <div class="modal-content">
-    <h2>Results</h2>
-    <p>Mistakes: <span id="modalMistakes">0</span></p>
-    <p>WPM: <span id="modalWPM">0</span></p>
-    <p>CPM: <span id="modalCPM">0</span></p>
-
-    <!-- Name input form, hidden by default -->
-    <form id="nameForm" style="display: none; margin: 16px 0;">
-      <input type="text" id="playerNameInput" placeholder="Enter your name for the leaderboard" required />
-      <button type="submit" id="submitName">Submit</button>
-    </form>
-
-    <p><strong>Rank: <a href="https://hashscan.io/testnet/topic/0.0.6219486" target="_blank">
-      <span id="modalRank">0</span>
-    </a></strong></p>
-    <button id="closeModal">Close</button>
-  </div>
-</div>
 </body>
 </html>

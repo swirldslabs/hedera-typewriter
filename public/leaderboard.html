@@ -1,12 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Leaderboard</title>
-    <link rel="stylesheet" href="styles.css" />
-
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Leaderboard</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" type="image/png" href="images/icon/favicon.png" />
+  <link rel="mask-icon" href="images/icon/black-cutout.svg" color="#000000">
+  <link rel="apple-touch-icon" href="images/icon/black-whiteH-1024x1024.png">
+  <link rel="apple-touch-icon" sizes="64x64" href="images/icon/black-whiteH-64x64.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="images/icon/black-whiteH-144x144.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="images/icon/black-whiteH-180x180.png">
+  <link rel="apple-touch-icon" sizes="192x192" href="images/icon/black-whiteH-192x192.png">
     <script type="module" defer>
       /**
        * Periodically fetches and updates the leaderboard scores every 4.5 seconds.
@@ -42,7 +48,7 @@
             <span class="player">${entry.name}</span>
           </div>
           <div class="stats">
-            <div><strong>${entry.wpm}</strong> Words Per Minute</div>
+            <div><strong>${entry.wpm}</strong> WPM</div>
             <div><strong>${entry.mistakes}</strong> Mistakes</div>
             <div><strong>${entry.cpm}</strong> CPM</div>
           </div>
