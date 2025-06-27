@@ -20,7 +20,7 @@ const wpmTag = document.querySelector(".wpm span");
 const cpmTag = document.querySelector(".cpm span");
 
 let timer;
-let maxTime = 2; // If you change this value, make sure to update the HTML value as well
+let maxTime = 40; // If you change this value, make sure to update the HTML value as well
 let timeLeft = maxTime;
 let charIndex = (mistakes = isTyping = 0);
 
