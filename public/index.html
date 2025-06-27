@@ -44,7 +44,7 @@
       <p id="paragraph"></p>
     </div>
   </div>
-  <button>Try Again</button>
+  <button id="tryAgain">Try Again</button>
 </div>
 
 <!-- Modal for results -->
@@ -54,7 +54,16 @@
     <p>Mistakes: <span id="modalMistakes">0</span></p>
     <p>WPM: <span id="modalWPM">0</span></p>
     <p>CPM: <span id="modalCPM">0</span></p>
-    <p><strong>Rank: <a href="https://hashscan.io/testnet/topic/0.0.6219486" target="_blank"><span id="modalRank">0</span></a></strong></p>
+
+    <!-- Name input form, hidden by default -->
+    <form id="nameForm" style="display: none; margin: 16px 0;">
+      <input type="text" id="playerNameInput" placeholder="Enter your name for the leaderboard" required />
+      <button type="submit" id="submitName">Submit</button>
+    </form>
+
+    <p><strong>Rank: <a href="https://hashscan.io/testnet/topic/0.0.6219486" target="_blank">
+      <span id="modalRank">0</span>
+    </a></strong></p>
     <button id="closeModal">Close</button>
   </div>
 </div>

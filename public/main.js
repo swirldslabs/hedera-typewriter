@@ -13,7 +13,7 @@ const paragraphs = [
 
 const typingText = document.querySelector(".typing-text p");
 const inpField = document.querySelector(".wrapper .input-field");
-const tryAgainBtn = document.querySelector(".content button");
+const tryAgainBtn = document.getElementById("tryAgain");
 const timeTag = document.querySelector(".time span b");
 const mistakeTag = document.querySelector(".mistake span");
 const wpmTag = document.querySelector(".wpm span");
@@ -38,7 +38,13 @@ function loadParagraph() {
     typingText.innerHTML += span;
   });
   typingText.querySelectorAll("span")[0].classList.add("active");
-  document.addEventListener("keydown", () => inpField.focus());
+  document.addEventListener("keydown", () => {
+    const isModalOpen =
+      document.getElementById("resultModal").style.display === "flex";
+    if (!isModalOpen) {
+      inpField.focus();
+    }
+  });
   typingText.addEventListener("click", () => inpField.focus());
 }
 
@@ -123,26 +129,45 @@ async function showModal() {
   document.getElementById("modalMistakes").innerText = mistakes;
   document.getElementById("modalWPM").innerText = wpmTag.innerText;
   document.getElementById("modalCPM").innerText = cpmTag.innerText;
-  document.getElementById("modalRank").innerText = "Submitting...";
+  document.getElementById("modalRank").innerText = "0";
+
+  // Show the modal and name form
   modal.style.display = "flex";
+  document.getElementById("nameForm").style.display = "block";
+}
 
-  // Save result to leaderboard
-  let playerName = prompt("Enter your name for the leaderboard:");
+// Handle name submission
+document.getElementById("nameForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const playerNameInput = document.getElementById("playerNameInput");
+  let playerName = playerNameInput.value.trim();
 
+  // Validate against colons
   if (playerName.includes(":")) {
     alert("Name cannot contain colons (:). Please try again.");
-    playerName = prompt("Enter your name for the leaderboard:");
+    return;
   }
 
+  // Disable the submit button while submitting
+  const submitBtn = document.getElementById("submitName");
+  submitBtn.disabled = true;
+  document.getElementById("modalRank").innerText = "Submitting...";
+
+  // Send score
   const rank = await submitScore(
-    playerName.trim(),
+    playerName,
     wpmTag.innerText,
     mistakes,
     cpmTag.innerText
   );
-  
+
+  // Update rank display
   document.getElementById("modalRank").innerText = rank;
-}
+
+  // Optionally hide the form after submission
+  playerNameInput.style.display = "none";
+  submitBtn.style.display = "none";
+});
 
 async function submitScore(name, wpm, mistakes, cpm) {
   try {
@@ -170,8 +195,31 @@ async function submitScore(name, wpm, mistakes, cpm) {
 function closeModal() {
   const modal = document.getElementById("resultModal");
   modal.style.display = "none";
+
+  // Hide name form and reset it for the next round
+  const nameForm = document.getElementById("nameForm");
+  nameForm.style.display = "none";
+  const playerNameInput = document.getElementById("playerNameInput");
+  playerNameInput.style.display = "block";
+  playerNameInput.value = "";
+  const submitBtn = document.getElementById("submitName");
+  submitBtn.style.display = "block";
+  submitBtn.disabled = false;
+
+  // Refocus on the hidden game input so the user can start typing again
+  inpField.focus();
 }
+
+document.getElementById("closeModal").addEventListener("click", closeModal);
+tryAgainBtn.addEventListener("click", () => {
+  // If the modal is open, close it first
+  if (document.getElementById("resultModal").style.display === "flex") {
+    closeModal();
+  } else {
+    resetGame();
+    inpField.focus();
+  }
+});
 
 loadParagraph();
 inpField.addEventListener("input", initTyping);
-tryAgainBtn.addEventListener("click", resetGame);

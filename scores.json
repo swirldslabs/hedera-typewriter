@@ -18,6 +18,18 @@
     "cpm": 27
   },
   {
+    "name": "Ben leppens",
+    "wpm": 140,
+    "mistakes": 0,
+    "cpm": 35
+  },
+  {
+    "name": "Sven swenen",
+    "wpm": 132,
+    "mistakes": 3,
+    "cpm": 99
+  },
+  {
     "name": "Debby",
     "wpm": 126,
     "mistakes": 0,
@@ -36,6 +48,24 @@
     "cpm": 18
   },
   {
+    "name": "Michiel Leppens",
+    "wpm": 104,
+    "mistakes": 6,
+    "cpm": 69
+  },
+  {
+    "name": "Tien",
+    "wpm": 96,
+    "mistakes": 7,
+    "cpm": 8
+  },
+  {
+    "name": "Jesse Bosmans",
+    "wpm": 96,
+    "mistakes": 10,
+    "cpm": 8
+  },
+  {
     "name": "Michiel Mulders",
     "wpm": 57,
     "mistakes": 2,
@@ -48,9 +78,21 @@
     "cpm": 66
   },
   {
+    "name": "Ben Boppens",
+    "wpm": 42,
+    "mistakes": 18,
+    "cpm": 7
+  },
+  {
     "name": " slsl",
     "wpm": 24,
     "mistakes": 18,
     "cpm": 2
+  },
+  {
+    "name": "Ben leppens",
+    "wpm": 0,
+    "mistakes": 4,
+    "cpm": 0
   }
 ]

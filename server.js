@@ -94,6 +94,12 @@ app.use(
   })
 );
 
+// --- ROOT REDIRECT ---
+// Redirect only the bare domain to the game index. Other routes (e.g. /api/scores) remain unchanged.
+app.get('/', (req, res) => {
+  res.redirect('/game/index.html');
+});
+
 // If you need to handle preflight manually (not usually needed with cors()):
 app.options("/api/scores", (req, res) => {
   res.sendStatus(204);
