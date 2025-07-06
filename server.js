@@ -143,9 +143,12 @@ app.post("/api/scores", async (req, res) => {
   const txTopicMessageSubmit = await new TopicMessageSubmitTransaction({
     topicId,
     message: `${name}:${wpm}:${mistakes}:${cpm}`,
-  }).execute(client);
+  }).freezeWith(client);
 
-  await txTopicMessageSubmit.getReceipt(client); // Wait for the transaction to be confirmed
+  const signedTx = await txTopicMessageSubmit.sign(MY_PRIVATE_KEY);
+  const txTopicMessageSubmitResponse = await signedTx.execute(client);
+
+  await txTopicMessageSubmitResponse.getReceipt(client); // Wait for the transaction to be confirmed
 
   // Store locally for easy restarting of the server
   const scores = loadScores();

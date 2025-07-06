@@ -25,7 +25,8 @@ async function main() {
     const txCreateTopic = new TopicCreateTransaction();
 
     //Sign with the client operator private key and submit the transaction to a Hedera network
-    const txCreateTopicResponse = await txCreateTopic.execute(client);
+    // Set a submit key for the topic so people can submit messages to the topic
+    const txCreateTopicResponse = await txCreateTopic.setSubmitKey(MY_PRIVATE_KEY).execute(client);
 
     //Request the receipt of the transaction
     const receiptCreateTopicTx = await txCreateTopicResponse.getReceipt(client);

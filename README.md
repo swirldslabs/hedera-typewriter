@@ -17,7 +17,9 @@ Welcome to the **Speed Typing Game**, a web-based application designed to test a
 
 ### Setup
 
-1. **Topic ID:** Before we can run the game, make sure to create a new topic ID on the Hedera testnet. Copy the Topic ID and paste it in the `.env` file in the next step.
+1. **Topic ID:** Before we can run the game, make sure to create a new topic ID on the Hedera testnet. Copy the Topic ID and paste it in the `.env` file in the next step. (Use the portal with the correct account type!)
+
+**Don't forget to update the topic ID in the hashscan link in the `public/index.html` file as well on line 95.**
 
 2. **Hedera Account and Environment Variables**:
 Fill out your `OPERATOR_KEY`, `OPERATOR_ID`, and `TOPIC_ID` in the `.env` file. You can copy the `.env.example` file to `.env` and fill in your details:
