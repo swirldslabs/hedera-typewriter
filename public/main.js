@@ -11,52 +11,84 @@ const paragraphs = [
   "Leveraging the Hedera Consensus Service (HCS), developers can build decentralized event-tracking systems with guaranteed immutability and fairness. By submitting events to the HCS, applications receive cryptographic timestamps and globally ordered events, ensuring a reliable audit trail for regulatory compliance. This capability is ideal for industries like supply chain management, where transparency and traceability are crucial, or for financial services that require tamper-proof transaction logs. The low latency and high throughput of HCS make it an unparalleled choice for applications requiring real-time event processing at scale, all while maintaining low operational costs.",
 ];
 
-const typingText = document.querySelector(".typing-text p");
-const inpField = document.querySelector(".wrapper .input-field");
-const tryAgainBtn = document.getElementById("tryAgain");
-const timeTag = document.querySelector(".time span b");
-const mistakeTag = document.querySelector(".mistake span");
-const wpmTag = document.querySelector(".wpm span");
-const cpmTag = document.querySelector(".cpm span");
-
-let timer;
-let maxTime = 10; // If you change this value, make sure to update the HTML value as well
-let timeLeft = maxTime;
-let charIndex = (mistakes = isTyping = 0);
+const typingText = document.querySelector('.typing-text p');
+const inpField = document.querySelector('.wrapper .input-field');
+const tryAgainBtn = document.getElementById('tryAgain');
+const timeTag = document.querySelector('.time span b');
+const mistakeTag = document.querySelector('.mistake span');
+const wpmTag = document.querySelector('.wpm span');
+const cpmTag = document.querySelector('.cpm span');
 
 // Modal elements
 const nameForm = document.getElementById('nameForm');
 const playerNameInput = document.getElementById('playerNameInput');
 const submitNameBtn = document.getElementById('submitName');
 
+let timer;
+let maxTime = 5; // Change this to adjust game duration
+let timeLeft = maxTime;
+let charIndex = 0;
+let mistakes = 0;
+let isTyping = false;
+
 // Hide name form and button initially
 nameForm.hidden = true;
 submitNameBtn.style.display = 'none';
 
-// Menu buttons
 document.getElementById('playNow').addEventListener('click', resetGame);
+
+document.addEventListener('keydown', () => {
+  const isModalOpen = document.getElementById('resultModal').style.display === 'flex';
+  if (!isModalOpen) inpField.focus();
+});
+typingText.addEventListener('click', () => inpField.focus());
+
+/**
+ * Fetch existing scores and calculate provisional rank for current stats.
+ */
+async function calculateLocalRank(wpm, mistakesCount, cpmCount) {
+  try {
+    const res = await fetch('/api/scores');
+    const scores = await res.json();
+    // Append current score (without name)
+    scores.push({ name: '', wpm, mistakes: mistakesCount, cpm: cpmCount });
+    // Sort by WPM desc, mistakes asc, CPM desc
+    scores.sort((a, b) => {
+      if (b.wpm !== a.wpm) return b.wpm - a.wpm;
+      if (a.mistakes !== b.mistakes) return a.mistakes - b.mistakes;
+      return b.cpm - a.cpm;
+    });
+    // Find index of the score with empty name (first occurrence)
+    const idx = scores.findIndex(s => s.name === '' && s.wpm === wpm && s.mistakes === mistakesCount && s.cpm === cpmCount);
+    return idx >= 0 ? idx + 1 : scores.length;
+  } catch (e) {
+    console.error('Error fetching scores for rank calc', e);
+    return null;
+  }
+}
 
 function loadParagraph() {
   const ranIndex = Math.floor(Math.random() * paragraphs.length);
-  typingText.innerHTML = "";
-  paragraphs[ranIndex].split("").forEach((char) => {
-    let span = `<span>${char}</span>`;
-    typingText.innerHTML += span;
+  typingText.innerHTML = '';
+  paragraphs[ranIndex].split('').forEach(char => {
+    typingText.innerHTML += `<span>${char}</span>`;
   });
-  typingText.querySelectorAll("span")[0].classList.add("active");
-  document.addEventListener("keydown", () => {
-    const isModalOpen =
-      document.getElementById("resultModal").style.display === "flex";
-    if (!isModalOpen) {
-      inpField.focus();
-    }
-  });
-  typingText.addEventListener("click", () => inpField.focus());
+  const spans = typingText.querySelectorAll('span');
+  spans[0].classList.add('active');
+  clearInterval(timer);
+  timeLeft = maxTime;
+  timeTag.innerText = timeLeft;
+  charIndex = mistakes = isTyping = 0;
+  inpField.value = '';
+  wpmTag.innerText = 0;
+  mistakeTag.innerText = 0;
+  cpmTag.innerText = 0;
 }
 
 function initTyping() {
-  let characters = typingText.querySelectorAll("span");
-  let typedChar = inpField.value.split("")[charIndex];
+  const characters = typingText.querySelectorAll('span');
+  const typedChar = inpField.value.split('')[charIndex];
+
   if (charIndex < characters.length && timeLeft > 0) {
     if (!isTyping) {
       timer = setInterval(initTimer, 1000);
@@ -65,44 +97,32 @@ function initTyping() {
     if (typedChar == null) {
       if (charIndex > 0) {
         charIndex--;
-        if (characters[charIndex].classList.contains("incorrect")) {
-          mistakes--;
-        }
-        characters[charIndex].classList.remove("correct", "incorrect");
+        if (characters[charIndex].classList.contains('incorrect')) mistakes--;
+        characters[charIndex].classList.remove('correct', 'incorrect');
       }
     } else {
-      if (characters[charIndex].innerText == typedChar) {
-        characters[charIndex].classList.add("correct");
+      if (characters[charIndex].innerText === typedChar) {
+        characters[charIndex].classList.add('correct');
       } else {
         mistakes++;
-        characters[charIndex].classList.add("incorrect");
+        characters[charIndex].classList.add('incorrect');
       }
       charIndex++;
     }
 
-    // Remove active class from all spans and add to current
-    characters.forEach((span) => span.classList.remove("active"));
+    characters.forEach(span => span.classList.remove('active'));
     if (characters[charIndex]) {
-      characters[charIndex].classList.add("active");
-
-      // Scroll to the active character
-      characters[charIndex].scrollIntoView({
-        behavior: "smooth",
-        block: "center",
-      });
+      characters[charIndex].classList.add('active');
+      characters[charIndex].scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
 
-    let wpm = Math.round(
-      ((charIndex - mistakes) / 5 / (maxTime - timeLeft)) * 60
-    );
-    wpm = wpm < 0 || !wpm || wpm === Infinity ? 0 : wpm;
-
+    const wpm = Math.max(0, Math.round(((charIndex - mistakes) / 5 / (maxTime - timeLeft)) * 60));
     wpmTag.innerText = wpm;
     mistakeTag.innerText = mistakes;
     cpmTag.innerText = charIndex - mistakes;
   } else {
     clearInterval(timer);
-    inpField.value = "";
+    inpField.value = '';
     showModal();
   }
 }
@@ -119,37 +139,32 @@ function initTimer() {
 
 function resetGame() {
   loadParagraph();
-  clearInterval(timer);
-  timeLeft = maxTime;
-  charIndex = mistakes = isTyping = 0;
-  inpField.value = "";
-  timeTag.innerText = timeLeft;
-  wpmTag.innerText = 0;
-  mistakeTag.innerText = 0;
-  cpmTag.innerText = 0;
 }
 
-// Modal Functions
-// Show results modal and name form
+// Show results modal, calculate provisional rank, and reset form
 async function showModal() {
-  const modal = document.getElementById('resultModal');
+  const wpm = parseInt(wpmTag.innerText);
   document.getElementById('modalMistakes').innerText = mistakes;
-  document.getElementById('modalWPM').innerText = wpmTag.innerText;
-  document.getElementById('modalCPM').innerText = cpmTag.innerText;
-  document.getElementById('modalRank').innerText = 'TBD'; // Placeholder until score is submitted
+  document.getElementById('modalWPM').innerText = wpm;
+  document.getElementById('modalCPM').innerText = charIndex - mistakes;
+  document.getElementById('modalRank').innerText = '…';
 
-  // Reveal the form
+  // Reveal form
   nameForm.hidden = false;
   submitNameBtn.style.display = '';
   playerNameInput.disabled = false;
   playerNameInput.value = '';
   submitNameBtn.disabled = false;
 
-  modal.style.display = 'flex';
+  document.getElementById('resultModal').style.display = 'flex';
   playerNameInput.focus();
-}
 
-typeof showModal;
+  // Calculate and display offline rank
+  const provisionalRank = await calculateLocalRank(wpm, mistakes, charIndex - mistakes);
+  if (provisionalRank) {
+    document.getElementById('modalRank').innerText = provisionalRank;
+  }
+}
 
 // Handle score submission via the standalone button
 submitNameBtn.addEventListener('click', async () => {
@@ -168,23 +183,36 @@ submitNameBtn.addEventListener('click', async () => {
   submitNameBtn.disabled = true;
   document.getElementById('modalRank').innerText = 'Submitting...';
 
-  const rank = await submitScore(
+  const finalRank = await submitScore(
     name,
-    wpmTag.innerText,
+    parseInt(wpmTag.innerText),
     mistakes,
-    cpmTag.innerText
+    charIndex - mistakes
   );
 
-  document.getElementById('modalRank').innerText = rank;
+  document.getElementById('modalRank').innerText = finalRank;
   playerNameInput.disabled = true;
   submitNameBtn.style.display = 'none';
 });
 
+async function submitScore(name, wpm, mistakesCount, cpm) {
+  try {
+    const response = await fetch('/api/scores', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, wpm, mistakes: mistakesCount, cpm })
+    });
+    const { rank } = await response.json();
+    return rank;
+  } catch (err) {
+    console.error('Failed to submit score', err);
+    return '—';
+  }
+}
+
 // Close modal, reset form, reset game, refocus
 function closeModal() {
-  const modal = document.getElementById('resultModal');
-  modal.style.display = 'none';
-
+  document.getElementById('resultModal').style.display = 'none';
   nameForm.hidden = true;
   playerNameInput.disabled = false;
   playerNameInput.value = '';
@@ -195,34 +223,9 @@ function closeModal() {
   inpField.focus();
 }
 
-
-async function submitScore(name, wpm, mistakes, cpm) {
-  try {
-    const response = await fetch("http://localhost:3000/api/scores", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        name,
-        wpm: parseInt(wpm),
-        mistakes: parseInt(mistakes),
-        cpm: parseInt(cpm),
-      }),
-    });
-
-    // Optionally redirect to leaderboard
-    //window.location.href = '/game/leaderboard.html';
-
-    const { rank } = await response.json();
-    return rank;
-  } catch (err) {
-    console.error("Failed to submit score", err);
-  }
-}
-
-document.getElementById("closeModal").addEventListener("click", closeModal);
-tryAgainBtn.addEventListener("click", () => {
-  // If the modal is open, close it first
-  if (document.getElementById("resultModal").style.display === "flex") {
+document.getElementById('closeModal').addEventListener('click', closeModal);
+tryAgainBtn.addEventListener('click', () => {
+  if (document.getElementById('resultModal').style.display === 'flex') {
     closeModal();
   } else {
     resetGame();
@@ -230,5 +233,6 @@ tryAgainBtn.addEventListener("click", () => {
   }
 });
 
+// Kick everything off
 loadParagraph();
-inpField.addEventListener("input", initTyping);
+inpField.addEventListener('input', initTyping);

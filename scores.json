@@ -1,5 +1,23 @@
 [
   {
+    "name": "Sep",
+    "wpm": 105,
+    "mistakes": 6,
+    "cpm": 35
+  },
+  {
+    "name": "Ben Leppens",
+    "wpm": 83,
+    "mistakes": 10,
+    "cpm": 111
+  },
+  {
+    "name": "Greg",
+    "wpm": 66,
+    "mistakes": 17,
+    "cpm": 22
+  },
+  {
     "name": "Michiel",
     "wpm": 2,
     "mistakes": 41,
