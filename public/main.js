@@ -25,7 +25,7 @@ const playerNameInput = document.getElementById('playerNameInput');
 const submitNameBtn = document.getElementById('submitName');
 
 let timer;
-let maxTime = 5; // Change this to adjust game duration
+let maxTime = 10; // Change this to adjust game duration
 let timeLeft = maxTime;
 let charIndex = 0;
 let mistakes = 0;
@@ -37,9 +37,9 @@ submitNameBtn.style.display = 'none';
 
 document.getElementById('playNow').addEventListener('click', resetGame);
 
-document.addEventListener('keydown', () => {
+document.addEventListener('keydown', (e) => {
   const isModalOpen = document.getElementById('resultModal').style.display === 'flex';
-  if (!isModalOpen) inpField.focus();
+  if (!isModalOpen && e.key !== 'Enter') inpField.focus();
 });
 typingText.addEventListener('click', () => inpField.focus());
 
@@ -71,58 +71,66 @@ function loadParagraph() {
   const ranIndex = Math.floor(Math.random() * paragraphs.length);
   typingText.innerHTML = '';
   paragraphs[ranIndex].split('').forEach(char => {
-    typingText.innerHTML += `<span>${char}</span>`;
+    const span = document.createElement('span');
+    span.innerText = char;
+    typingText.appendChild(span);
   });
-  const spans = typingText.querySelectorAll('span');
-  spans[0].classList.add('active');
+  typingText.querySelector('span').classList.add('active');
   clearInterval(timer);
   timeLeft = maxTime;
   timeTag.innerText = timeLeft;
   charIndex = mistakes = isTyping = 0;
-  inpField.value = '';
   wpmTag.innerText = 0;
   mistakeTag.innerText = 0;
   cpmTag.innerText = 0;
 }
 
-function initTyping() {
+function initTyping(e) {
+  e.preventDefault();
   const characters = typingText.querySelectorAll('span');
-  const typedChar = inpField.value.split('')[charIndex];
-
   if (charIndex < characters.length && timeLeft > 0) {
     if (!isTyping) {
       timer = setInterval(initTimer, 1000);
       isTyping = true;
     }
-    if (typedChar == null) {
+
+    let typedChar = e.key;
+    if (typedChar === 'Backspace') {
       if (charIndex > 0) {
         charIndex--;
         if (characters[charIndex].classList.contains('incorrect')) mistakes--;
         characters[charIndex].classList.remove('correct', 'incorrect');
       }
-    } else {
-      if (characters[charIndex].innerText === typedChar) {
+    } else if (typedChar.length === 1 || typedChar === ' ') {
+      let expectedChar = characters[charIndex].innerText;
+      if (typedChar === expectedChar) {
         characters[charIndex].classList.add('correct');
       } else {
         mistakes++;
         characters[charIndex].classList.add('incorrect');
       }
       charIndex++;
+    } else {
+      return; // Ignore non-printable keys
     }
 
     characters.forEach(span => span.classList.remove('active'));
-    if (characters[charIndex]) {
+    if (charIndex < characters.length) {
       characters[charIndex].classList.add('active');
-      characters[charIndex].scrollIntoView({ behavior: 'smooth', block: 'center' });
+      characters[charIndex].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
     }
 
     const wpm = Math.max(0, Math.round(((charIndex - mistakes) / 5 / (maxTime - timeLeft)) * 60));
     wpmTag.innerText = wpm;
     mistakeTag.innerText = mistakes;
     cpmTag.innerText = charIndex - mistakes;
+
+    if (charIndex >= characters.length) {
+      clearInterval(timer);
+      showModal();
+    }
   } else {
     clearInterval(timer);
-    inpField.value = '';
     showModal();
   }
 }
@@ -147,7 +155,10 @@ async function showModal() {
   document.getElementById('modalMistakes').innerText = mistakes;
   document.getElementById('modalWPM').innerText = wpm;
   document.getElementById('modalCPM').innerText = charIndex - mistakes;
-  document.getElementById('modalRank').innerText = '…';
+
+  // Change to message instead of pre-showing rank
+  const rankHeader = document.querySelector('#nameForm h2');
+  rankHeader.innerHTML = 'Submit your score to see your rank';
 
   // Reveal form
   nameForm.hidden = false;
@@ -159,10 +170,14 @@ async function showModal() {
   document.getElementById('resultModal').style.display = 'flex';
   playerNameInput.focus();
 
-  // Calculate and display offline rank
-  const provisionalRank = await calculateLocalRank(wpm, mistakes, charIndex - mistakes);
-  if (provisionalRank) {
-    document.getElementById('modalRank').innerText = provisionalRank;
+  // Add enter key listener for submit
+  playerNameInput.addEventListener('keydown', handleModalEnter);
+}
+
+function handleModalEnter(e) {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    submitNameBtn.click();
   }
 }
 
@@ -181,7 +196,8 @@ submitNameBtn.addEventListener('click', async () => {
   }
 
   submitNameBtn.disabled = true;
-  document.getElementById('modalRank').innerText = 'Submitting...';
+  const rankHeader = document.querySelector('#nameForm h2');
+  rankHeader.innerText = 'Submitting...';
 
   const finalRank = await submitScore(
     name,
@@ -190,9 +206,12 @@ submitNameBtn.addEventListener('click', async () => {
     charIndex - mistakes
   );
 
-  document.getElementById('modalRank').innerText = finalRank;
+  rankHeader.innerHTML = `You’re Rank <a href="https://hashscan.io/testnet/topic/0.0.6296170" target="_blank">#${finalRank}</a>`;
   playerNameInput.disabled = true;
   submitNameBtn.style.display = 'none';
+
+  // Remove enter listener
+  playerNameInput.removeEventListener('keydown', handleModalEnter);
 });
 
 async function submitScore(name, wpm, mistakesCount, cpm) {
@@ -235,4 +254,9 @@ tryAgainBtn.addEventListener('click', () => {
 
 // Kick everything off
 loadParagraph();
-inpField.addEventListener('input', initTyping);
+document.addEventListener('keydown', (e) => {
+  const isModalOpen = document.getElementById('resultModal').style.display === 'flex';
+  if (!isModalOpen && (e.key.length === 1 || e.key === ' ' || e.key === 'Backspace')) {
+    initTyping(e);
+  }
+});

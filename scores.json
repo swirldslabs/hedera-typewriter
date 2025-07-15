@@ -1,26 +1,62 @@
 [
   {
-    "name": "Sep",
-    "wpm": 105,
-    "mistakes": 6,
-    "cpm": 35
-  },
-  {
-    "name": "Ben Leppens",
-    "wpm": 83,
-    "mistakes": 10,
-    "cpm": 111
-  },
-  {
-    "name": "Greg",
-    "wpm": 66,
-    "mistakes": 17,
-    "cpm": 22
+    "name": "Michiel",
+    "wpm": 144,
+    "mistakes": 3,
+    "cpm": 12
   },
   {
     "name": "Michiel",
-    "wpm": 2,
-    "mistakes": 41,
-    "cpm": 1
+    "wpm": 99,
+    "mistakes": 8,
+    "cpm": 74
+  },
+  {
+    "name": "MIchiel",
+    "wpm": 96,
+    "mistakes": 8,
+    "cpm": 8
+  },
+  {
+    "name": "Michiel",
+    "wpm": 77,
+    "mistakes": 69,
+    "cpm": 251
+  },
+  {
+    "name": "Michiel",
+    "wpm": 70,
+    "mistakes": 16,
+    "cpm": 123
+  },
+  {
+    "name": "Michiel",
+    "wpm": 54,
+    "mistakes": 24,
+    "cpm": 67
+  },
+  {
+    "name": "Michiel",
+    "wpm": 51,
+    "mistakes": 80,
+    "cpm": 166
+  },
+  {
+    "name": "ns",
+    "wpm": 24,
+    "mistakes": 10,
+    "cpm": 2
+  },
+  {
+    "name": "MIchiel",
+    "wpm": 5,
+    "mistakes": 61,
+    "cpm": 4
+  },
+  {
+    "name": "mel",
+    "wpm": 0,
+    "mistakes": 13,
+    "cpm": 0
   }
 ]

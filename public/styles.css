@@ -28,8 +28,8 @@
 }
 
 html {
-	scroll-behavior: smooth;
- 	-webkit-font-smoothing: antialiased;
+    scroll-behavior: smooth;
+     -webkit-font-smoothing: antialiased;
 }
 
 ::selection {
@@ -55,7 +55,7 @@ body {
   width: 740px;
   text-align: center;
   margin: 0 auto;
-	padding-bottom: 24px;
+    padding-bottom: 24px;
 }
 
 .heading {
@@ -66,17 +66,31 @@ body {
   margin-top: 8px;
 }
 
+#nameForm h2 a {
+  color: #8259EF;
+  text-decoration: none;
+}
+
+#nameForm h2 a:hover {
+  text-decoration: underline;
+}
+
+#nameform h2 #rank {
+  color: #8259EF;
+  font-weight: 100;
+}
+
 #nameForm input {
   background-color: rgba(255, 255, 255, 0.08);
-	border: none;
+    border: none;
   border-bottom: 1px solid #8259EF;
   color: #FFF;
   font-size: 15px;
   width: 100%;
   padding: 16px;
   margin: 16px 0 40px 0;
-	outline: none;
-	box-shadow: none;
+    outline: none;
+    box-shadow: none;
   -webkit-appearance: none;
      -moz-appearance: none;
           appearance: none;
@@ -85,9 +99,9 @@ body {
 #nameForm input:focus,
 #nameForm textarea:focus,
 #nameForm select:focus {
-  	outline: none;
-  	border-bottom: 3px solid #8259EF;
-	box-shadow: none;
+      outline: none;
+      border-bottom: 3px solid #8259EF;
+    box-shadow: none;
 }
 
 /* ========== TYPOGRAPHY ========== */
@@ -126,7 +140,7 @@ button {
   cursor: pointer;
   outline: none;
   transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease, color 0.3s ease;
-	min-height: 34px;
+    min-height: 34px;
 }
 
 button:hover {
@@ -200,26 +214,32 @@ header .logo span {
 }
 
 .typing-text {
-  overflow: hidden;
-  max-height: 220px;
+  overflow-x: auto;
+  overflow-y: hidden;
 }
 
 .typing-text::-webkit-scrollbar {
-  width: 0;
+  height: 0;
+}
+
+.typing-text::-moz-scrollbar {
+  height: 0;
 }
 
 .typing-text p {
   color: #A7A7A7;
   font-size: 18px;
   line-height: 32px;
-  text-align: justify;
+  text-align: left;
   letter-spacing: 0.75px;
+  white-space: pre;
   word-break: keep-all;
-  display: -webkit-box;
-  -webkit-line-clamp: 7;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  overflow-wrap: normal;
+  hyphens: none;
+  -webkit-hyphens: none;
+  -moz-hyphens: none;
+  -ms-hyphens: none;
+  margin: 0;
 }
 
 .typing-text p span {
@@ -348,14 +368,14 @@ header .logo span {
 }
 
 .modal-header {
-	background-color: rgba(0, 0, 0, 0.16);
-	margin: 4px 4px 0 4px;
-	padding: 16px 40px;
- 	display: flex;
- 	justify-content: space-between;
- 	align-items: center;
-	color: #FFF;
-	font-size: 20px;
+    background-color: rgba(0, 0, 0, 0.16);
+    margin: 4px 4px 0 4px;
+    padding: 16px 40px;
+     display: flex;
+     justify-content: space-between;
+     align-items: center;
+    color: #FFF;
+    font-size: 20px;
 }
 
 .modal-content {
@@ -371,8 +391,8 @@ header .logo span {
 }
 
 #modalRank {
-	color: #8259EF;
-	text-decoration: none;
+    color: #8259EF;
+    text-decoration: none;
 }
 
 .modal-footer {
