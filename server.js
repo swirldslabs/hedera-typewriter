@@ -123,6 +123,8 @@ app.options("/api/scores", (req, res) => {
 // --- parse JSON bodies ---
 app.use(express.json());
 
+app.disable('x-powered-by'); // Disables the X-Powered-By header for security
+
 // --- serve static files from public/ ---
 app.use("/game", express.static(path.join(__dirname, "public")));
 
