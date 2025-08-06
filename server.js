@@ -5,6 +5,7 @@ import path from "path";
 import fs from "fs";
 import { fileURLToPath } from "url";
 import { rateLimit } from 'express-rate-limit'
+import Joi from "joi";
 import dotenv from "dotenv";
 dotenv.config(); // Load environment variables from .env file
 
@@ -143,18 +144,32 @@ app.get("/api/scores", (req, res) => {
   res.json(top10);
 });
 
+const scoreSchema = Joi.object({
+  name: Joi.string()
+    .trim()
+    .min(1)
+    .max(50)
+    .pattern(/^[a-zA-Z0-9 _-]+$/)
+    .required(),
+  wpm: Joi.number().integer().min(0).max(1000).required(),
+  mistakes: Joi.number().integer().min(0).max(1000).required(),
+  cpm: Joi.number().integer().min(0).max(2000).required(),
+});
+
 // --- POST a new score ---
 app.post("/api/scores", async (req, res) => {
   // Validate request body
-  const { name, wpm, mistakes, cpm } = req.body;
-  if (typeof name !== "string" || typeof wpm !== "number") {
-    return res.status(400).json({ error: "Invalid payload" });
+  const { error, value } = scoreSchema.validate(req.body);
+  if (error) {
+    return res.status(400).json({ error: error.details[0].message });
   }
+  const { name, wpm, mistakes, cpm } = value;
+  const sanitizedName = name.replace(/[<>]/g, '');
 
   // Store score in topic ID
   const txTopicMessageSubmit = await new TopicMessageSubmitTransaction({
     topicId,
-    message: `${name}:${wpm}:${mistakes}:${cpm}`,
+    message: `${sanitizedName}:${wpm}:${mistakes}:${cpm}`,
   }).freezeWith(client);
 
   const signedTx = await txTopicMessageSubmit.sign(MY_PRIVATE_KEY);
@@ -164,7 +179,7 @@ app.post("/api/scores", async (req, res) => {
 
   // Store locally for easy restarting of the server
   const scores = loadScores();
-  scores.push({ name, wpm, mistakes, cpm });
+  scores.push({ name: sanitizedName, wpm, mistakes, cpm });
 
   // Sort scores (first wpm, then mistakes, then cpm) and save them
   scores.sort((a, b) => {
@@ -177,9 +192,9 @@ app.post("/api/scores", async (req, res) => {
   // return rank of the new score
   const rank =
     scores.findIndex(
-      (score) => score.name === name && score.wpm === wpm && score.cpm === cpm
+      (score) => score.name === sanitizedName && score.wpm === wpm && score.cpm === cpm
     ) + 1;
-  console.log(`Rank of ${name} with WPM ${wpm}: ${rank}`);
+  console.log(`Rank of ${sanitizedName} with WPM ${wpm}: ${rank}`);
   res.status(201).json({ success: true, rank });
 });
 

@@ -25,7 +25,7 @@ const playerNameInput = document.getElementById('playerNameInput');
 const submitNameBtn = document.getElementById('submitName');
 
 let timer;
-let maxTime = 40; // Change this to adjust game duration
+let maxTime = 2; // Change this to adjust game duration
 let timeLeft = maxTime;
 let charIndex = 0;
 let mistakes = 0;
