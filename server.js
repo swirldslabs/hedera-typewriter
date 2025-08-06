@@ -101,7 +101,7 @@ syncScoresFromTopic();
 // Allow only requests coming from http://localhost:3000
 app.use(
   cors({
-    origin: "*",
+    origin: "http://localhost:3000",
     methods: ["GET", "POST", "OPTIONS"],
     allowedHeaders: ["Content-Type"],
   })
