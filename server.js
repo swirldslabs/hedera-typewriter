@@ -1,5 +1,6 @@
 // server.js
 import express from "express";
+import helmet from "helmet";
 import cors from "cors";
 import path from "path";
 import fs from "fs";
@@ -12,6 +13,7 @@ dotenv.config(); // Load environment variables from .env file
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const app = express();
+app.use(helmet()); // Use Helmet for security best practices
 const PORT = process.env.PORT || 3000;
 const SCORES_FILE = path.join(__dirname, "scores.json");
 const topicId = process.env.TOPIC_ID; // Replace with your actual topic ID
