@@ -43,6 +43,19 @@ document.addEventListener('keydown', (e) => {
 });
 typingText.addEventListener('click', () => inpField.focus());
 
+// Utility: escape HTML to prevent XSS
+function escapeHTML(str) {
+  return str.replace(/[&<>"]+/g, (tag) => {
+    const chars = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' };
+    return chars[tag] || tag;
+  });
+}
+
+// Validate player name: 1-50 chars; letters, numbers, spaces, _ and - only
+function isValidName(name) {
+  return /^[a-zA-Z0-9 _-]{1,50}$/.test(name);
+}
+
 /**
  * Fetch existing scores and calculate provisional rank for current stats.
  */
@@ -183,21 +196,17 @@ function handleModalEnter(e) {
 
 // Handle score submission via the standalone button
 submitNameBtn.addEventListener('click', async () => {
-  const name = playerNameInput.value.trim();
-  if (!name) {
-    alert('Please enter your name.');
+  let name = playerNameInput.value.trim();
+  if (!isValidName(name)) {
+    alert('Name must be 1-50 characters: letters, numbers, spaces, underscores, or hyphens only.');
     playerNameInput.focus();
     return;
   }
-  if (name.includes(':')) {
-    alert('Name cannot contain colons (:). Please try again.');
-    playerNameInput.focus();
-    return;
-  }
+  name = escapeHTML(name);
 
   submitNameBtn.disabled = true;
   const rankHeader = document.querySelector('#nameForm h2');
-  rankHeader.innerText = 'Submitting...';
+  rankHeader.textContent = 'Submitting...';
 
   const finalRank = await submitScore(
     name,
