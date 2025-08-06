@@ -1,19 +1,22 @@
 {
-  "name": "scripts",
+  "name": "speed-typing-game",
   "version": "1.0.0",
   "description": "",
-  "main": "createTopic.js",
+  "main": "server.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@hashgraph/sdk": "^2.66.0",
-    "cors": "^2.8.5",
-    "dotenv": "^16.5.0",
-    "express": "^5.1.0"
+    "@hashgraph/sdk": "2.66.0",
+    "cors": "2.8.5",
+    "dotenv": "16.5.0",
+    "express": "5.1.0",
+    "express-rate-limit": "8.0.1",
+    "helmet": "8.1.0",
+    "joi": "18.0.0"
   }
 }

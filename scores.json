@@ -1,9 +1,27 @@
 [
   {
+    "name": "Michiel-ben",
+    "wpm": 228,
+    "mistakes": 2,
+    "cpm": 19
+  },
+  {
+    "name": "sls-",
+    "wpm": 204,
+    "mistakes": 6,
+    "cpm": 17
+  },
+  {
     "name": "Michiel",
     "wpm": 144,
     "mistakes": 3,
     "cpm": 12
+  },
+  {
+    "name": "micheil",
+    "wpm": 105,
+    "mistakes": 12,
+    "cpm": 340
   },
   {
     "name": "Michiel",
@@ -40,6 +58,12 @@
     "wpm": 51,
     "mistakes": 80,
     "cpm": 166
+  },
+  {
+    "name": "Bram leppens",
+    "wpm": 36,
+    "mistakes": 16,
+    "cpm": 3
   },
   {
     "name": "ns",

@@ -1,18 +1,33 @@
 // server.js
 import express from "express";
+import helmet from "helmet";
 import cors from "cors";
 import path from "path";
 import fs from "fs";
 import { fileURLToPath } from "url";
+import { rateLimit } from 'express-rate-limit'
+import Joi from "joi";
 import dotenv from "dotenv";
 dotenv.config(); // Load environment variables from .env file
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const app = express();
+app.use(helmet()); // Use Helmet for security best practices
 const PORT = process.env.PORT || 3000;
 const SCORES_FILE = path.join(__dirname, "scores.json");
 const topicId = process.env.TOPIC_ID; // Replace with your actual topic ID
+
+// Rate limiting middleware to prevent abuse
+const limiter = rateLimit({
+	windowMs: 10 * 60 * 1000, // 15 minutes
+	limit: 150, // Limit each IP to 100 requests per `window`
+	standardHeaders: 'draft-8', // draft-6: `RateLimit-*` headers; draft-7 & draft-8: combined `RateLimit` header
+	legacyHeaders: false, // Disable the `X-RateLimit-*` headers.
+	ipv6Subnet: 56, // Set to 60 or 64 to be less aggressive, or 52 or 48 to be more aggressive
+})
+
+app.use(limiter) // Apply the rate limiting middleware to all requests.
 
 // Hedera setup
 import {
@@ -88,7 +103,7 @@ syncScoresFromTopic();
 // Allow only requests coming from http://localhost:3000
 app.use(
   cors({
-    origin: "*",
+    origin: "http://localhost:3000",
     methods: ["GET", "POST", "OPTIONS"],
     allowedHeaders: ["Content-Type"],
   })
@@ -107,6 +122,8 @@ app.options("/api/scores", (req, res) => {
 
 // --- parse JSON bodies ---
 app.use(express.json());
+
+app.disable('x-powered-by'); // Disables the X-Powered-By header for security
 
 // --- serve static files from public/ ---
 app.use("/game", express.static(path.join(__dirname, "public")));
@@ -131,18 +148,32 @@ app.get("/api/scores", (req, res) => {
   res.json(top10);
 });
 
+const scoreSchema = Joi.object({
+  name: Joi.string()
+    .trim()
+    .min(1)
+    .max(50)
+    .pattern(/^[a-zA-Z0-9 _-]+$/)
+    .required(),
+  wpm: Joi.number().integer().min(0).max(1000).required(),
+  mistakes: Joi.number().integer().min(0).max(1000).required(),
+  cpm: Joi.number().integer().min(0).max(2000).required(),
+});
+
 // --- POST a new score ---
 app.post("/api/scores", async (req, res) => {
   // Validate request body
-  const { name, wpm, mistakes, cpm } = req.body;
-  if (typeof name !== "string" || typeof wpm !== "number") {
-    return res.status(400).json({ error: "Invalid payload" });
+  const { error, value } = scoreSchema.validate(req.body);
+  if (error) {
+    return res.status(400).json({ error: error.details[0].message });
   }
+  const { name, wpm, mistakes, cpm } = value;
+  const sanitizedName = name.replace(/[<>]/g, '');
 
   // Store score in topic ID
   const txTopicMessageSubmit = await new TopicMessageSubmitTransaction({
     topicId,
-    message: `${name}:${wpm}:${mistakes}:${cpm}`,
+    message: `${sanitizedName}:${wpm}:${mistakes}:${cpm}`,
   }).freezeWith(client);
 
   const signedTx = await txTopicMessageSubmit.sign(MY_PRIVATE_KEY);
@@ -152,7 +183,7 @@ app.post("/api/scores", async (req, res) => {
 
   // Store locally for easy restarting of the server
   const scores = loadScores();
-  scores.push({ name, wpm, mistakes, cpm });
+  scores.push({ name: sanitizedName, wpm, mistakes, cpm });
 
   // Sort scores (first wpm, then mistakes, then cpm) and save them
   scores.sort((a, b) => {
@@ -165,9 +196,9 @@ app.post("/api/scores", async (req, res) => {
   // return rank of the new score
   const rank =
     scores.findIndex(
-      (score) => score.name === name && score.wpm === wpm && score.cpm === cpm
+      (score) => score.name === sanitizedName && score.wpm === wpm && score.cpm === cpm
     ) + 1;
-  console.log(`Rank of ${name} with WPM ${wpm}: ${rank}`);
+  console.log(`Rank of ${sanitizedName} with WPM ${wpm}: ${rank}`);
   res.status(201).json({ success: true, rank });
 });
 

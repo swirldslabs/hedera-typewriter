@@ -3,8 +3,8 @@ const {
   PrivateKey,
   Client,
   TopicCreateTransaction,
-} = require("@hashgraph/sdk"); // v2.46.0
-require("dotenv").config(); // Load environment variables from .env file
+} = require("@hashgraph/sdk");
+require("dotenv").config();
 
 async function main() {
   let client;
