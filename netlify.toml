@@ -1,0 +1,13 @@
+[build]
+  publish = "public"
+  # no build step needed unless you add one
+
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+
+# Map your old API paths to the function
+[[redirects]]
+  from = "/api/scores"
+  to = "/.netlify/functions/scores"
+  status = 200
