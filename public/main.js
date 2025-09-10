@@ -215,7 +215,7 @@ submitNameBtn.addEventListener('click', async () => {
     charIndex - mistakes
   );
 
-  rankHeader.innerHTML = `You’re Rank <a href="https://hashscan.io/testnet/topic/0.0.6296170" target="_blank">#${finalRank}</a>`;
+  rankHeader.innerHTML = `You’re Rank <a href="https://hashscan.io/testnet/topic/0.0.6793945" target="_blank">#${finalRank}</a>`;
   playerNameInput.disabled = true;
   submitNameBtn.style.display = 'none';
 
@@ -268,4 +268,5 @@ document.addEventListener('keydown', (e) => {
   if (!isModalOpen && (e.key.length === 1 || e.key === ' ' || e.key === 'Backspace')) {
     initTyping(e);
   }
+
 });
